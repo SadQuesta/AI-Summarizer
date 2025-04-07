@@ -1,24 +1,26 @@
-"use client";
+"use client";  // Doğrudan client-side olarak işaretlendi
 
-import { useContext, useState } from "react";
+import { JSX, useContext, useState } from "react";
 import AuthContext from "../context/AuthContext";
 import ProfileDetails from "./ProfileDetails";
 import SummaryList from "./SummaryList";
 import SummaryModal from "./SummaryModal";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { useRouter } from "next/navigation";
 
-export default function ProfilePage() {
+// useState ve useContext gibi hook'lar bileşenin üst kısmında
+const ProfilePage = (): JSX.Element => {
+  // Kullanıcı verisi burada her render'da koşulsuz olarak alınıyor
   const authContext = useContext(AuthContext);
+  
+  // Bu state koşulsuz olarak tanımlanmalı
+  const [selectedSummary, setSelectedSummary] = useState<null | string>(null);
 
-  // Null kontrolü ekledik
+  // Eğer authContext null ise kullanıcıya bir loading mesajı göster
   if (!authContext) {
     return <p className="text-center">Yükleniyor...</p>;
   }
 
   const { user, summaries, logout, loading, error } = authContext;
-  const [selectedSummary, setSelectedSummary] = useState(null);
-  const router = useRouter();
 
   if (loading) return <p className="text-center">Yükleniyor...</p>;
   if (error || !user) {
@@ -36,4 +38,6 @@ export default function ProfilePage() {
       </div>
     </ProtectedRoute>
   );
-}
+};
+
+export default ProfilePage;
