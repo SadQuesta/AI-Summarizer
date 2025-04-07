@@ -1,8 +1,13 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# 📁 Genel Bilgi:
+# Bu dosya, proje içindeki geçici, hassas ya da push'lanmaması gereken dosyaları Git takibinden hariç tutar.
+# Daha fazla bilgi: https://help.github.com/articles/ignoring-files/
 
-# dependencies
-/node_modules
-/.pnp
+############################
+# 🚀 Node.js / Yarn / npm
+############################
+
+node_modules/
+.pnp/
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -10,32 +15,63 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
+############################
+# 🧪 Test & Coverage
+############################
 
-# next.js
-/.next/
-/out/
+coverage/
+*.lcov
 
-# production
-/build
+############################
+# ⚡ Next.js
+############################
 
-# misc
-.DS_Store
-*.pem
+.next/
+out/
+build/
 
-# debug
+############################
+# 🔐 Ortam Değişkenleri
+############################
+
+.env*
+**/.env*
+
+############################
+# 🐍 Python (backend için)
+############################
+
+backend/venv/
+**/venv*/
+*.py[cod]
+__pycache__/
+
+############################
+# 🧱 Typescript
+############################
+
+*.tsbuildinfo
+next-env.d.ts
+
+############################
+# 🛠️ Debug ve Loglar
+############################
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+############################
+# 📦 Vercel
+############################
 
-# vercel
-.vercel
+.vercel/
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+############################
+# 🎯 Misc (çöp dosyalar)
+############################
+
+.DS_Store
+*.pem
+.qodo
