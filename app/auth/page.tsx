@@ -10,8 +10,14 @@ export default function AuthPage() {
     const [email, setEmail] = useState(""); // Kayıt için e-posta
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState(""); // Kayıt için şifre doğrulama
-
-    const { login, register, error } = useContext(AuthContext);
+    
+    const auth = useContext(AuthContext); // useContext ile auth'u al
+    if (!auth) {
+        // Eğer AuthContext null ise, sayfa yüklenmeden önce kullanıcıyı login sayfasına yönlendir
+        return <div>Yükleniyor...</div>;
+    }
+    
+    const { login, register, error } = auth;  // Artık auth null değil, güvenle kullanabilirsin.
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
