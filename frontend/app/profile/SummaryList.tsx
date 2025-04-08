@@ -21,7 +21,6 @@ export default function SummaryList({ summaries, openModal, deleteSummary }: Pro
 
   const filteredSummaries = useMemo(() => {
     let filtered = [...summaries];
-
     if (selectedTag) filtered = filtered.filter(s => s.tags?.includes(selectedTag));
     if (selectedFormat) filtered = filtered.filter(s => s.format === selectedFormat);
     if (searchQuery)
@@ -40,7 +39,6 @@ export default function SummaryList({ summaries, openModal, deleteSummary }: Pro
   return (
     <div>
       <h2 className="text-2xl font-semibold text-gray-800 ml-1.5 mb-4">Özet Geçmişim</h2>
-
       <input
         type="text"
         placeholder="Özette ara..."

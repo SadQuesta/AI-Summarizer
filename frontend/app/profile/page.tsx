@@ -10,7 +10,7 @@ import { SummaryType } from "../types/types";
 
 const ProfilePage = (): JSX.Element => {
   const authContext = useContext(AuthContext);
-  const [selectedSummary, setSelectedSummary] = useState<SummaryType |any>(null);
+  const [selectedSummary, setSelectedSummary] = useState<SummaryType | null>(null);
 
   if (!authContext) return <p className="text-center">Yükleniyor...</p>;
 
@@ -25,7 +25,7 @@ const ProfilePage = (): JSX.Element => {
         <ProfileDetails user={user} logout={logout} />
         <SummaryList
           summaries={summaries}
-          openModal={(summary) => setSelectedSummary(summary)}
+          openModal={setSelectedSummary}
           deleteSummary={deleteSummary}
         />
         {selectedSummary && (
