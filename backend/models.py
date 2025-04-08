@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime,Boole
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import ARRAY
 from datetime import datetime
-from database import Base
+from backend.database import Base
 
 # Kullanıcı modeli
 class User(Base):
