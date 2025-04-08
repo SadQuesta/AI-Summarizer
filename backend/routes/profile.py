@@ -101,57 +101,65 @@ async def upload_profile_picture(
 
 # ---------------------- Yapay Zeka Banner Oluşturma ----------------------
 
-UPLOAD_BANNER_DIR = "uploads/banners"
-os.makedirs(UPLOAD_BANNER_DIR, exist_ok=True)
+# UPLOAD_BANNER_DIR = "uploads/banners"
+# os.makedirs(UPLOAD_BANNER_DIR, exist_ok=True)
 
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-model_id = "CompVis/stable-diffusion-v1-4"
-pipe = StableDiffusionImg2ImgPipeline.from_pretrained(model_id, torch_dtype=torch.float16 if device == "cuda" else torch.float32)
-pipe.to(device)
+# pipe = None
+# if os.environ.get("DISABLE_BANNER") != "1":
+#     model_id = "CompVis/stable-diffusion-v1-4"
+#     pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
+#         model_id,
+#         torch_dtype=torch.float16 if torch.device == "cuda" else torch.float32
+#     )
+#     pipe.to(torch.device)
 
 
+# @router.post("/generate-banner")
+# async def generate_banner(
+#     db: Session = Depends(get_db),
+#     current_user: User = Depends(get_current_user)
+# ):
+#     if os.environ.get("DISABLE_BANNER") == "1":
+#         raise HTTPException(status_code=503, detail="Banner üretimi şu anda devre dışı.")
 
-@router.post("/generate-banner")
-async def generate_banner(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-    try:
-        if not current_user.profile_picture:
-            raise HTTPException(status_code=400, detail="Lütfen önce bir profil fotoğrafı yükleyin.")
+#     try:
+        
 
-        # 🔍 Profil fotoğrafı dosya yolunu çöz
-        url_path = current_user.profile_picture.replace("http://127.0.0.1:8000/", "")
-        image_path = os.path.join(os.getcwd(), url_path)
+#         if not current_user.profile_picture:
+#             raise HTTPException(status_code=400, detail="Lütfen önce bir profil fotoğrafı yükleyin.")
 
-        if not os.path.exists(image_path):
-            raise HTTPException(status_code=400, detail="Profil fotoğrafı bulunamadı.")
+#         # 🔍 Profil fotoğrafı dosya yolunu çöz
+#         url_path = current_user.profile_picture.replace("http://127.0.0.1:8000/", "")
+#         image_path = os.path.join(os.getcwd(), url_path)
 
-        # 📸 Profil fotoğrafını aç
-        init_image = Image.open(image_path).convert("RGB")
-        init_image = init_image.resize((768, 512))  # ideal çözünürlük
+#         if not os.path.exists(image_path):
+#             raise HTTPException(status_code=400, detail="Profil fotoğrafı bulunamadı.")
 
-        # 🎨 Prompt
-        prompt = "A stylish, futuristic,animated,tech-inspired banner design based on the user's profile picture"
+#         # 📸 Profil fotoğrafını aç
+#         init_image = Image.open(image_path).convert("RGB")
+#         init_image = init_image.resize((768, 512))  # ideal çözünürlük
 
-        # 🔥 Görsel üret
-        image = pipe(prompt=prompt, image=init_image, strength=0.75, guidance_scale=7.5).images[0]
+#         # 🎨 Prompt
+#         prompt = "A stylish, futuristic,animated,tech-inspired banner design based on the user's profile picture"
 
-        # 💾 Kaydet
-        banner_filename = f"{uuid.uuid4()}_banner.png"
-        banner_path = os.path.join(UPLOAD_BANNER_DIR, banner_filename)
-        image.save(banner_path)
+#         # 🔥 Görsel üret
+#         image = pipe(prompt=prompt, image=init_image, strength=0.75, guidance_scale=7.5).images[0]
 
-        # 🌐 Veritabanına yaz
-        current_user.banner_url = f"http://127.0.0.1:8000/uploads/banners/{banner_filename}"
-        db.commit()
-        db.refresh(current_user)
+#         # 💾 Kaydet
+#         banner_filename = f"{uuid.uuid4()}_banner.png"
+#         banner_path = os.path.join(UPLOAD_BANNER_DIR, banner_filename)
+#         image.save(banner_path)
 
-        return {"banner_url": current_user.banner_url}
+#         # 🌐 Veritabanına yaz
+#         current_user.banner_url = f"http://127.0.0.1:8000/uploads/banners/{banner_filename}"
+#         db.commit()
+#         db.refresh(current_user)
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Banner oluşturulamadı: {str(e)}")
+#         return {"banner_url": current_user.banner_url}
+
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Banner oluşturulamadı: {str(e)}")
 
 
 
