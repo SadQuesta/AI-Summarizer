@@ -22,8 +22,7 @@ const extractUniqueFormats = (summaries: SummaryType[]) => {
 };
 
 export default function SummaryList({ summaries, openModal, deleteSummary }: Props) {
-    const { requireToken } = useContext(AuthContext)!;
-    const token = requireToken();
+    
 
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");

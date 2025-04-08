@@ -1,4 +1,4 @@
-"use client";  // Bunu ekleyerek, bu dosyanın client-side bileşen olarak çalışmasını sağlıyoruz
+"use client";
 
 import { JSX, useContext, useState } from "react";
 import AuthContext from "../context/AuthContext";
@@ -6,27 +6,18 @@ import ProfileDetails from "./ProfileDetails";
 import SummaryList from "./SummaryList";
 import SummaryModal from "./SummaryModal";
 import ProtectedRoute from "@/components/ProtectedRoute";
-
-
-
+import { SummaryType } from "../types/types";
 
 const ProfilePage = (): JSX.Element => {
   const authContext = useContext(AuthContext);
+  const [selectedSummary, setSelectedSummary] = useState<SummaryType | null>(null);
 
-  // ✅ Hooklar koşulsuz çağrıldı
-  const [selectedSummary, setSelectedSummary] = useState<null | string>(null);
+  if (!authContext) return <p className="text-center">Yükleniyor...</p>;
 
-  // ⛔ Bu kontrol hook'lardan SONRA yapılmalı
-  if (!authContext) {
-    return <p className="text-center">Yükleniyor...</p>;
-  }
-
-  const { user, summaries, logout, loading, error,deleteSummary, } = authContext;
+  const { user, summaries, logout, loading, error, deleteSummary } = authContext;
 
   if (loading) return <p className="text-center">Yükleniyor...</p>;
-  if (error || !user) {
-    return <p className="text-center text-red-500">Kullanıcı bilgisi yüklenemedi.</p>;
-  }
+  if (error || !user) return <p className="text-center text-red-500">Kullanıcı bilgisi yüklenemedi.</p>;
 
   return (
     <ProtectedRoute>
@@ -34,14 +25,12 @@ const ProfilePage = (): JSX.Element => {
         <ProfileDetails user={user} logout={logout} />
         <SummaryList
           summaries={summaries}
-          openModal={(id) => setSelectedSummary(id.toString())}
+          openModal={(summary) => setSelectedSummary(summary)}
           deleteSummary={deleteSummary}
-          
         />
-
-        {/* {selectedSummary && (
+        {selectedSummary && (
           <SummaryModal summary={selectedSummary} closeModal={() => setSelectedSummary(null)} />
-        )} */}
+        )}
       </div>
     </ProtectedRoute>
   );

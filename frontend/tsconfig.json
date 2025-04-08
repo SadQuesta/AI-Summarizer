@@ -25,6 +25,6 @@
       "@context/*": ["app/context/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "public/fonts/Sarabun-Regular.ttf"],
-  "exclude": ["node_modules"]
+  "include": ["frontend/next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "public/fonts/Sarabun-Regular.ttf"],
+  "exclude": ["frontend/node_modules"]
 }
