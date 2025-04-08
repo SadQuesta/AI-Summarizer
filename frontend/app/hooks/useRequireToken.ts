@@ -1,20 +1,23 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import AuthContext from "../context/AuthContext";
+import AuthContext from "@/app/context/AuthContext";
 
-/**
- * Token'ı güvenli şekilde alır. Eğer yoksa login sayfasına yönlendirir.
- */
-export const useRequireToken = (): string => {
-  const authContext = useContext(AuthContext);
+export const useRequireToken = () => {
   const router = useRouter();
+  const authContext = useContext(AuthContext);
+  const [token, setToken] = useState<string | null>(null);
 
-  if (!authContext || !authContext.token) {
-    router.push("/login");
-    throw new Error("Giriş yapılması gerekiyor.");
-  }
+  useEffect(() => {
+    if (typeof window === "undefined") return; // 🔐 sadece tarayıcıda çalışsın
+    if (!authContext) return;
+    if (!authContext.token) {
+      router.push("/auth"); // client-side yönlendirme
+    } else {
+      setToken(authContext.token);
+    }
+  }, [authContext, router]);
 
-  return authContext.token;
+  return token;
 };
