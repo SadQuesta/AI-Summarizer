@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from backend.database import get_db
 from backend.models import Summary, User
 from backend.auth import decode_access_token
-from services.openai_service import summarize_text
-from services.generate_pdf import generate_pdf
+from backend.services.openai_service import summarize_text
+from backend.services.generate_pdf import generate_pdf
 from pydantic import BaseModel, Field
 
 router = APIRouter(tags=["summaries"])
