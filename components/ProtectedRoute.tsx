@@ -4,27 +4,35 @@ import { useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import AuthContext from "../app/context/AuthContext";
 
+type ProtectedRouteProps = {
+  children: React.ReactNode;
+  requireAdmin?: boolean;
+};
+
 export default function ProtectedRoute({
-    children,
-    requireAdmin = false,
-}: {
-    children: React.ReactNode;
-    requireAdmin?: boolean;
-}) {
-    const { token, user, loading } = useContext(AuthContext);
-    const router = useRouter();
+  children,
+  requireAdmin = false,
+}: ProtectedRouteProps) {
+  const authContext = useContext(AuthContext);
+  const router = useRouter();
 
-    useEffect(() => {
-        if (!loading) {
-            if (!token) {
-                router.push("/auth");
-            } else if (requireAdmin && user?.role !== "admin") {
-                router.push("/unauthorized"); // yetkisizse buraya yönlenir
-            }
-        }
-    }, [token, user, loading, requireAdmin]);
+  useEffect(() => {
+    if (!authContext) return; // context hiç yoksa render etme
 
-    if (loading) return <p className="text-center">Yükleniyor...</p>;
+    const { token, user, loading } = authContext;
 
-    return <>{children}</>;
+    if (!loading) {
+      if (!token) {
+        router.push("/auth");
+      } else if (requireAdmin && user?.role !== "admin") {
+        router.push("/unauthorized");
+      }
+    }
+  }, [authContext, requireAdmin, router]);
+
+  if (!authContext || authContext.loading) {
+    return <p className="text-center">Yükleniyor...</p>;
+  }
+
+  return <>{children}</>;
 }

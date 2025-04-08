@@ -142,7 +142,7 @@ def download_summary_pdf(
 
     summary_content = summary.summary
     if summary.format == "categorized":
-        summary_content = {
+        summary_content = { 
             "main_idea": summary.main_idea,
             "key_points": summary.key_points,
             "conclusion": summary.conclusion

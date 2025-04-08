@@ -1,4 +1,4 @@
-"use client";  // Doğrudan client-side olarak işaretlendi
+"use client";  // Bunu ekleyerek, bu dosyanın client-side bileşen olarak çalışmasını sağlıyoruz
 
 import { JSX, useContext, useState } from "react";
 import AuthContext from "../context/AuthContext";
@@ -7,20 +7,21 @@ import SummaryList from "./SummaryList";
 import SummaryModal from "./SummaryModal";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
-// useState ve useContext gibi hook'lar bileşenin üst kısmında
+
+
+
 const ProfilePage = (): JSX.Element => {
-  // Kullanıcı verisi burada her render'da koşulsuz olarak alınıyor
   const authContext = useContext(AuthContext);
-  
-  // Bu state koşulsuz olarak tanımlanmalı
+
+  // ✅ Hooklar koşulsuz çağrıldı
   const [selectedSummary, setSelectedSummary] = useState<null | string>(null);
 
-  // Eğer authContext null ise kullanıcıya bir loading mesajı göster
+  // ⛔ Bu kontrol hook'lardan SONRA yapılmalı
   if (!authContext) {
     return <p className="text-center">Yükleniyor...</p>;
   }
 
-  const { user, summaries, logout, loading, error } = authContext;
+  const { user, summaries, logout, loading, error,deleteSummary, } = authContext;
 
   if (loading) return <p className="text-center">Yükleniyor...</p>;
   if (error || !user) {
@@ -31,10 +32,16 @@ const ProfilePage = (): JSX.Element => {
     <ProtectedRoute>
       <div className="max-w-5xl mx-auto p-9 bg-white rounded-lg shadow-lg">
         <ProfileDetails user={user} logout={logout} />
-        <SummaryList summaries={summaries} openModal={setSelectedSummary} />
-        {selectedSummary && (
+        <SummaryList
+          summaries={summaries}
+          openModal={(id) => setSelectedSummary(id.toString())}
+          deleteSummary={deleteSummary}
+          
+        />
+
+        {/* {selectedSummary && (
           <SummaryModal summary={selectedSummary} closeModal={() => setSelectedSummary(null)} />
-        )}
+        )} */}
       </div>
     </ProtectedRoute>
   );

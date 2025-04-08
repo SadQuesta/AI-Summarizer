@@ -1,26 +1,39 @@
 "use client";
+
 import Link from "next/link";
 import { useContext, useState } from "react";
 import AuthContext from "@/app/context/AuthContext";
 
 export default function Navbar() {
-  const { user, logout } = useContext(AuthContext);
-  const [mobileOpen, setMobileOpen] = useState(false); // 👈 toggle için state
+  const authContext = useContext(AuthContext);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  if (!authContext) return null; // Context yoksa boş render
+
+  const { user, logout } = authContext;
 
   const toggleMobileMenu = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const defaultAvatar =
+    "https://i0.wp.com/florrycreativecare.com/wp-content/uploads/2020/08/blank-profile-picture-mystery-man-avatar-973460.jpg?ssl=1";
+
+  const handleLogout = async () => {
+    await logout();
+    setMobileOpen(false);
+  };
+
   return (
     <nav className="bg-blue-800 text-white py-4 px-6 rounded-lg shadow-lg">
       <div className="container mx-auto flex justify-between items-center">
-        {/* Logo and Title */}
+        {/* Logo & Title */}
         <div className="flex items-center space-x-2">
           <img src="/favicon.ico" className="w-12 h-12 object-cover select-none" alt="Logo" />
           <h1 className="text-xl font-bold select-none">AI Summarizer</h1>
         </div>
 
-        {/* Links for larger screens */}
+        {/* Desktop Links */}
         <div className="hidden md:flex space-x-8 items-center">
           <Link className="hover:text-yellow-300" href="/">Home</Link>
           <Link className="hover:text-yellow-300" href="/summarize">Summarizer</Link>
@@ -32,18 +45,23 @@ export default function Navbar() {
             <div className="flex items-center space-x-2">
               <Link href="/profile" className="flex items-center space-x-2 hover:text-yellow-300">
                 <img
-                  src={user.profile_picture || "/default-avatar.png"}
+                  src={user.profile_picture || defaultAvatar}
                   alt="avatar"
                   className="w-8 h-8 rounded-full border"
                 />
                 <span>{user.username}</span>
               </Link>
-              <button onClick={logout} className="text-sm text-red-300 hover:text-red-500">Logout</button>
+              <button
+                onClick={handleLogout}
+                className="text-sm text-red-300 hover:text-red-500"
+              >
+                Logout
+              </button>
             </div>
           )}
         </div>
 
-        {/* Mobile menu icon */}
+        {/* Mobile Menu Toggle */}
         <div className="md:hidden">
           <button onClick={toggleMobileMenu} className="text-white text-2xl focus:outline-none">
             ☰
@@ -51,24 +69,21 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Navigation Toggle */}
+      {/* Mobile Menu */}
       {mobileOpen && (
         <div className="md:hidden mt-2 animate-slide-down">
           <div className="flex flex-col space-y-2">
-            <Link className="block p-2 hover:bg-blue-700 rounded" href="/" onClick={() => setMobileOpen(false)}>Home</Link>
-            <Link className="block p-2 hover:bg-blue-700 rounded" href="/summarize" onClick={() => setMobileOpen(false)}>Summarizer</Link>
-            <Link className="block p-2 hover:bg-blue-700 rounded" href="/contact" onClick={() => setMobileOpen(false)}>Contact</Link>
+            <Link className="block p-2 hover:bg-blue-700 rounded" href="/" onClick={toggleMobileMenu}>Home</Link>
+            <Link className="block p-2 hover:bg-blue-700 rounded" href="/summarize" onClick={toggleMobileMenu}>Summarizer</Link>
+            <Link className="block p-2 hover:bg-blue-700 rounded" href="/contact" onClick={toggleMobileMenu}>Contact</Link>
 
             {!user ? (
-              <Link className="block p-2 hover:bg-blue-700 rounded" href="/auth" onClick={() => setMobileOpen(false)}>Sign in</Link>
+              <Link className="block p-2 hover:bg-blue-700 rounded" href="/auth" onClick={toggleMobileMenu}>Sign in</Link>
             ) : (
               <>
-                <Link className="block p-2 hover:bg-blue-700 rounded" href="/profile" onClick={() => setMobileOpen(false)}>Profile</Link>
+                <Link className="block p-2 hover:bg-blue-700 rounded" href="/profile" onClick={toggleMobileMenu}>Profile</Link>
                 <button
-                  onClick={() => {
-                    logout();
-                    setMobileOpen(false);
-                  }}
+                  onClick={handleLogout}
                   className="block text-left p-2 hover:bg-blue-700 text-red-300 rounded"
                 >
                   Logout

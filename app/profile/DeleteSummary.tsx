@@ -1,3 +1,4 @@
+import {JSX} from "react";
 interface DeleteSummaryProps {
     summaryId: number;  // summaryId tipi belirtilmeli
     handleDelete: (id: number) => void;  // handleDelete fonksiyonu belirtilmeli

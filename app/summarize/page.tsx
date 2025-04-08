@@ -1,26 +1,34 @@
 "use client";
 
 import { useState, useContext } from "react";
-import AuthContext from "../context/AuthContext";
+import AuthContext from "@context/AuthContext";
 import { createSummary } from "@/lib/api";
 import { useRouter } from "next/navigation";
+import { SummaryType } from "../types/types";
 
 export default function SummarizerPage() {
-  const { token } = useContext(AuthContext);
+  const { requireToken } = useContext(AuthContext)!;
+    const token = requireToken();
   const [text, setText] = useState("");
   const [format, setFormat] = useState("paragraph");
-  const [summary, setSummary] = useState<any>(null);
+  const [summary, setSummary] = useState<SummaryType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [length, setLength] = useState("medium");
   const router = useRouter();
 
+  
   const handleSummarize = async () => {
     if (!text.trim()) return;
-
+  
     setIsLoading(true);
     try {
+      const token = requireToken(); // 🔐 güvenli token erişimi
       const res = await createSummary(text, format, length, token);
       setSummary(res.summary);
+  
+      setTimeout(() => {
+        router.push("/profile");
+      }, 2000);
     } catch (error) {
       console.error("Özetleme hatası:", error);
     } finally {
@@ -44,6 +52,7 @@ export default function SummarizerPage() {
         <div className="flex-1">
           <label className="block text-gray-700 mb-1">Özet Formatı</label>
           <select
+            aria-label="Kategori Seçimi"
             className="w-full p-2 border border-gray-300 rounded-lg"
             value={format}
             onChange={(e) => setFormat(e.target.value)}
@@ -58,6 +67,7 @@ export default function SummarizerPage() {
         <div className="flex-1">
           <label className="block text-gray-700 mb-1">Özet Uzunluğu</label>
           <select
+            aria-label="Uzunluk Seçimi"
             className="w-full p-2 border border-gray-300 rounded-lg"
             value={length}
             onChange={(e) => setLength(e.target.value)}
