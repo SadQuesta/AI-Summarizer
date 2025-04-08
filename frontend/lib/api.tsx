@@ -1,4 +1,4 @@
- const BASE_URL =" http://localhost:8000"//process.env.NEXT_PUBLIC_API_URL;
+ const BASE_URL ="https://ai-summarizer-phi-five.vercel.app"//process.env.NEXT_PUBLIC_API_URL;
 
 // ✅ Özet oluşturma
 export const createSummary = async (
