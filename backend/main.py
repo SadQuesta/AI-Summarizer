@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import summarize, auth, profile  
-from routes.summarize import router as upload_router
+from backend.routes import summarize, auth, profile  
+from backend.routes.summarize import router as upload_router
 from fastapi.staticfiles import StaticFiles
 
 
