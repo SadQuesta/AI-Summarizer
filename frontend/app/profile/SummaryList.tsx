@@ -7,7 +7,7 @@ import AuthContext from "@context/AuthContext";
 
 type Props = {
   summaries: SummaryType[];
-  openModal: (summaryId: number) => void;
+  openModal: (summary: SummaryType) => void;
   deleteSummary: (id: number) => void;
 };
 
