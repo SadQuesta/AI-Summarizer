@@ -10,7 +10,7 @@ import { SummaryType } from "../types/types";
 
 const ProfilePage = (): JSX.Element => {
   const authContext = useContext(AuthContext);
-  const [selectedSummary, setSelectedSummary] = useState<SummaryType |any>(null);
+  const [selectedSummary, setSelectedSummary] = useState<any>(null);
 
   if (!authContext) return <p className="text-center">Yükleniyor...</p>;
 
