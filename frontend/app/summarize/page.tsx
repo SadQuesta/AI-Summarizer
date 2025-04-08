@@ -5,24 +5,23 @@ import AuthContext from "@context/AuthContext";
 import { createSummary } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { SummaryType } from "../types/types";
-
+import { useRequireToken } from "@hooks/useRequireToken";
 export default function SummarizerPage() {
-  const { requireToken } = useContext(AuthContext)!;
-    const token = requireToken();
+  const token = useRequireToken();
+  
   const [text, setText] = useState("");
   const [format, setFormat] = useState("paragraph");
   const [summary, setSummary] = useState<SummaryType | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [length, setLength] = useState("medium");
   const router = useRouter();
-
+  if (!token) return null;
   
   const handleSummarize = async () => {
-    if (!text.trim()) return;
+    if (!text.trim() || !token) return;
   
     setIsLoading(true);
     try {
-      const token = requireToken(); // 🔐 güvenli token erişimi
       const res = await createSummary(text, format, length, token);
       setSummary(res.summary);
   
@@ -35,6 +34,7 @@ export default function SummarizerPage() {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <div className="max-w-3xl mx-auto my-8 p-6 bg-white shadow-lg rounded-lg">
