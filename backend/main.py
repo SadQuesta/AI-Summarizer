@@ -11,9 +11,9 @@ app = FastAPI(title="Summarizer API", version="1.0")
 # 🌍 CORS Middleware (Frontend ile haberleşme için)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # Frontend'in erişmesine izin ver
+    allow_origins=["*"],  # Frontend'in erişmesine izin ver
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],  # Sadece belirli HTTP metodlarına izin ver
+    allow_methods=["*"],  # Sadece belirli HTTP metodlarına izin ver
     allow_headers=["Authorization", "Content-Type"],  # Güvenliği artırmak için sadece gerekli başlıkları ekle
     expose_headers=["Content-Disposition"]
 )
