@@ -1,17 +1,17 @@
 from fpdf import FPDF
-import os
 from io import BytesIO
+
+# Render ortamında backend'in tam dosya yolu şöyledir:
+# "/opt/render/project/src/backend/services/assets/fonts/Roboto-Regular.ttf"
+
+FONT_PATH_REGULAR = "services/assets/fonts/Roboto-Regular.ttf"
+FONT_PATH_BOLD = "services/assets/fonts/Roboto-Bold.ttf"
 
 class PDF(FPDF):
     def __init__(self):
         super().__init__()
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        fonts_dir = os.path.join(base_dir, "assets", "fonts")
-        font_path_regular = os.path.join(fonts_dir, "Roboto-Regular.ttf")
-        font_path_bold = os.path.join(fonts_dir, "Roboto-Bold.ttf")
-
-        self.add_font("Roboto", "", font_path_regular, uni=True)
-        self.add_font("Roboto", "B", font_path_bold, uni=True)
+        self.add_font("Roboto", "", FONT_PATH_REGULAR, uni=True)
+        self.add_font("Roboto", "B", FONT_PATH_BOLD, uni=True)
         self.add_page()
         self.set_auto_page_break(auto=True, margin=15)
 
@@ -77,7 +77,6 @@ def generate_pdf(text, summary, format_type="paragraph") -> BytesIO:
     else:
         pdf.add_paragraph(summary)
 
-    # PDF'i bellekte oluştur
     pdf_buffer = BytesIO()
     pdf_bytes = pdf.output(dest='S').encode('latin-1')
     pdf_buffer.write(pdf_bytes)
