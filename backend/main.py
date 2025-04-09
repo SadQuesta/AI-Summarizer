@@ -11,7 +11,7 @@ app = FastAPI(title="Summarizer API", version="1.0")
 # 🌍 CORS Middleware (Frontend ile haberleşme için)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Frontend'in erişmesine izin ver
+    allow_origins=["https://ai-summarizer-lbe5a99jx-mustafa-nafi-ugurs-projects.vercel.app"],  # Frontend'in erişmesine izin ver
     allow_credentials=True,
     allow_methods=["*"],  # Sadece belirli HTTP metodlarına izin ver
     allow_headers=["*"],  # Güvenliği artırmak için sadece gerekli başlıkları ekle
