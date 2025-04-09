@@ -6,11 +6,11 @@ import { SummaryType } from "../types/types";
 
 type Props = {
   summaries: SummaryType[];
-  openModal: (summary: SummaryType) => void;
+  
   deleteSummary: (id: number) => void;
 };
 
-export default function SummaryList({ summaries, openModal, deleteSummary }: Props) {
+export default function SummaryList({ summaries,  deleteSummary }: Props) {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("newest");
@@ -80,7 +80,7 @@ export default function SummaryList({ summaries, openModal, deleteSummary }: Pro
               key={summary.id}
               summary={summary}
               handleDeleteSummary={deleteSummary}
-              openModal={() => openModal(summary)}
+              
             />
           ))
         )}

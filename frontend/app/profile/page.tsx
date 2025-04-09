@@ -1,16 +1,14 @@
 "use client";
 
-import { JSX, useContext, useState } from "react";
+import { JSX, useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import ProfileDetails from "./ProfileDetails";
 import SummaryList from "./SummaryList";
-import SummaryModal from "./SummaryModal";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { SummaryType } from "../types/types";
 
 const ProfilePage = (): JSX.Element => {
   const authContext = useContext(AuthContext);
-  const [selectedSummary, setSelectedSummary] = useState<SummaryType | null>(null);
 
   if (!authContext) return <p className="text-center">Yükleniyor...</p>;
 
@@ -25,12 +23,8 @@ const ProfilePage = (): JSX.Element => {
         <ProfileDetails user={user} logout={logout} />
         <SummaryList
           summaries={summaries}
-          openModal={setSelectedSummary}
           deleteSummary={deleteSummary}
         />
-        {selectedSummary && (
-          <SummaryModal summary={selectedSummary} closeModal={() => setSelectedSummary(null)} />
-        )}
       </div>
     </ProtectedRoute>
   );
