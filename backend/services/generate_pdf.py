@@ -2,18 +2,16 @@ from fpdf import FPDF
 import os
 from io import BytesIO
 
-# Font path'leri
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FONTS_DIR = os.path.join(BASE_DIR, "assets", "fonts")
-FONT_PATH_REGULAR = os.path.join(FONTS_DIR, "Roboto-Regular.ttf")
-FONT_PATH_BOLD = os.path.join(FONTS_DIR, "Roboto-Bold.ttf")
-
-
 class PDF(FPDF):
     def __init__(self):
         super().__init__()
-        self.add_font("Roboto", "", FONT_PATH_REGULAR, uni=True)
-        self.add_font("Roboto", "B", FONT_PATH_BOLD, uni=True)
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        fonts_dir = os.path.join(base_dir, "assets", "fonts")
+        font_path_regular = os.path.join(fonts_dir, "Roboto-Regular.ttf")
+        font_path_bold = os.path.join(fonts_dir, "Roboto-Bold.ttf")
+
+        self.add_font("Roboto", "", font_path_regular, uni=True)
+        self.add_font("Roboto", "B", font_path_bold, uni=True)
         self.add_page()
         self.set_auto_page_break(auto=True, margin=15)
 
