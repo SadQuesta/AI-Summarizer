@@ -1,11 +1,18 @@
+import os
+import glob
 from fpdf import FPDF
 from io import BytesIO
 
-# Render ortamında backend'in tam dosya yolu şöyledir:
-# "/opt/render/project/src/backend/services/assets/fonts/Roboto-Regular.ttf"
+# Font Cache temizleme (yeni eklenecek kısım)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FONTS_DIR = os.path.join(BASE_DIR, "assets", "fonts")
 
-FONT_PATH_REGULAR = "services/assets/fonts/Roboto-Regular.ttf"
-FONT_PATH_BOLD = "services/assets/fonts/Roboto-Bold.ttf"
+# Cache temizle
+for cache_file in glob.glob(os.path.join(FONTS_DIR, "*.pkl")):
+    os.remove(cache_file)
+
+FONT_PATH_REGULAR = os.path.join(FONTS_DIR, "Roboto-Regular.ttf")
+FONT_PATH_BOLD = os.path.join(FONTS_DIR, "Roboto-Bold.ttf")
 
 class PDF(FPDF):
     def __init__(self):
@@ -53,19 +60,16 @@ class PDF(FPDF):
             self.set_font("Roboto", "", size=12)
             self.multi_cell(0, 10, summary_dict["conclusion"])
 
-
 def generate_pdf(text, summary, format_type="paragraph") -> BytesIO:
     pdf = PDF()
     pdf.set_title("Özetleme PDF")
 
-    # Orijinal metin
     pdf.set_font("Roboto", "B", size=12)
     pdf.cell(0, 10, "Orijinal Metin:", ln=True)
     pdf.set_font("Roboto", "", size=12)
     pdf.multi_cell(0, 10, text)
     pdf.ln(10)
 
-    # Özet
     pdf.set_font("Roboto", "B", size=12)
     pdf.cell(0, 10, "Özet:", ln=True)
     pdf.set_font("Roboto", "", size=12)

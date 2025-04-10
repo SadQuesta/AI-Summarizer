@@ -24,7 +24,8 @@ else:
         pool_size=10,        # Maksimum bağlantı sayısı
         pool_pre_ping=True,
         max_overflow=20,     # Ekstra bağlantı limiti
-        echo=False           # Konsola SQL sorgularını yazma (False önerilir)
+        echo=False ,          # Konsola SQL sorgularını yazma (False önerilir)
+        connect_args={"sslmode": "require"}
     )
 
 # ✅ Session konfigürasyonu
