@@ -5,13 +5,11 @@ from database import get_db
 from models import Summary, User
 from auth import decode_access_token
 from services.generate_pdf import generate_pdf
-from pydantic import BaseModel
+
 import os, uuid
-from typing import List
-from diffusers import StableDiffusionPipeline
-import torch
-from PIL import Image
-from diffusers import StableDiffusionImg2ImgPipeline
+
+
+
 
 router = APIRouter(tags=["profile"])
 

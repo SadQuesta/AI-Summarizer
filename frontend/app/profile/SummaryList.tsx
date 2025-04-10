@@ -6,30 +6,47 @@ import { SummaryType } from "../types/types";
 
 type Props = {
   summaries: SummaryType[];
-  
   deleteSummary: (id: number) => void;
 };
 
-export default function SummaryList({ summaries,  deleteSummary }: Props) {
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+export default function SummaryList({ summaries, deleteSummary }: Props) {
+  const [selectedTag, setSelectedTag] = useState<string>("Tümü");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("newest");
   const [selectedFormat, setSelectedFormat] = useState("");
 
-  const tags = useMemo(() => [...new Set(summaries.flatMap(s => s.tags || []))], [summaries]);
-  const formats = useMemo(() => [...new Set(summaries.map(s => s.format || "Bilinmiyor"))], [summaries]);
+  // Her summary'den maksimum 2 tag al, sonra benzersiz hale getir
+  const tags = useMemo(() => {
+    const limitedTags = summaries.flatMap(s => s.tags?.slice(0, 2) || []);
+    const uniqueTags = Array.from(new Set(limitedTags));
+    return ["Tümü", ...uniqueTags];
+  }, [summaries]);
+
+  const formats = useMemo(
+    () => [...new Set(summaries.map(s => s.format || "Bilinmiyor"))],
+    [summaries]
+  );
 
   const filteredSummaries = useMemo(() => {
     let filtered = [...summaries];
-    if (selectedTag) filtered = filtered.filter(s => s.tags?.includes(selectedTag));
-    if (selectedFormat) filtered = filtered.filter(s => s.format === selectedFormat);
-    if (searchQuery)
+
+    if (selectedTag !== "Tümü") {
+      filtered = filtered.filter(s => s.tags?.includes(selectedTag));
+    }
+
+    if (selectedFormat) {
+      filtered = filtered.filter(s => s.format === selectedFormat);
+    }
+
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
       filtered = filtered.filter(s =>
-        s.text?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        s.summary?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        s.main_idea?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        s.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        s.text?.toLowerCase().includes(query) ||
+        s.summary?.toLowerCase().includes(query) ||
+        s.main_idea?.toLowerCase().includes(query) ||
+        s.tags?.some(tag => tag.toLowerCase().includes(query))
       );
+    }
 
     return sortOption === "oldest"
       ? filtered.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
@@ -39,6 +56,7 @@ export default function SummaryList({ summaries,  deleteSummary }: Props) {
   return (
     <div>
       <h2 className="text-2xl font-semibold text-gray-800 ml-1.5 mb-4">Özet Geçmişim</h2>
+
       <input
         type="text"
         placeholder="Özette ara..."
@@ -47,6 +65,24 @@ export default function SummaryList({ summaries,  deleteSummary }: Props) {
         className="w-full p-2 border rounded-lg mb-4"
       />
 
+      {/* TAG FİLTRESİ */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {tags.map(tag => (
+          <button
+            key={tag}
+            onClick={() => setSelectedTag(tag)}
+            className={`px-3 py-1 rounded-full text-sm transition ${
+              selectedTag === tag
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
+          >
+            #{tag}
+          </button>
+        ))}
+      </div>
+
+      {/* SIRALAMA VE FORMAT FİLTRESİ */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <select
           value={sortOption}
@@ -71,6 +107,7 @@ export default function SummaryList({ summaries,  deleteSummary }: Props) {
         </select>
       </div>
 
+      {/* ÖZETLER */}
       <div className="space-y-4 m-1.5 mb-2">
         {filteredSummaries.length === 0 ? (
           <p>Aramanıza uygun özet bulunamadı.</p>
@@ -80,7 +117,6 @@ export default function SummaryList({ summaries,  deleteSummary }: Props) {
               key={summary.id}
               summary={summary}
               handleDeleteSummary={deleteSummary}
-              
             />
           ))
         )}

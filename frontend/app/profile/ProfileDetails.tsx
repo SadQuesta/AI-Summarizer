@@ -13,7 +13,7 @@ type Props = {
 };
 
 export default function ProfileDetails({ user, logout }: Props) {
-  const defaultBanner = "https://source.unsplash.com/1600x400/?nature,technology";
+  
   const defaultProfile =
     "https://i0.wp.com/florrycreativecare.com/wp-content/uploads/2020/08/blank-profile-picture-mystery-man-avatar-973460.jpg?ssl=1";
 
@@ -21,42 +21,19 @@ export default function ProfileDetails({ user, logout }: Props) {
   const { requireToken } = useContext(AuthContext)!;
 
   const [profilePhoto, setProfilePhoto] = useState(user.profile_picture || defaultProfile);
-  const [bannerPhoto, setBannerPhoto] = useState(user.banner_url || defaultBanner);
+  
 
   const handleLogout = async () => {
     await logout();
     router.push("/auth");
   };
 
-  const handleBannerChange = async () => {
-    try {
-      const token = requireToken(); // ✅ string garanti
-      const data = await generateBanner(token);
-      setBannerPhoto(data.banner_url);
-    } catch (err) {
-      console.error("Banner oluşturulamadı:", err);
-    }
-  };
+ 
 
   return (
     <div>
-      {/* Banner */}
-      <div className="rounded-t-lg h-60 overflow-hidden relative">
-        <img
-          src={bannerPhoto}
-          alt="Banner"
-          className="w-full h-full object-cover"
-        />
-        <button
-          onClick={handleBannerChange}
-          className="absolute bottom-2 right-2 bg-white bg-opacity-75 p-2 rounded cursor-pointer hover:bg-opacity-90"
-        >
-          Banner Değiştir
-        </button>
-      </div>
-
-      {/* Profil Fotoğrafı */}
-      <div className="w-60 h-60 border-4 border-white rounded-full overflow-hidden mx-auto -mt-32 relative z-10 shadow-lg">
+     
+      <div className="w-60 h-60 border-5 border-white rounded-full overflow-hidden mx-auto -mt-3 relative z-10 shadow-lg">
         <img
           src={profilePhoto}
           alt="Profile"

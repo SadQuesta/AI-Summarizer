@@ -25,12 +25,12 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-blue-800 text-white py-4 px-6 rounded-lg shadow-lg">
+    <nav className="bg-sky-700 text-white py-4 px-6 rounded-lg shadow-lg">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo & Title */}
         <div className="flex items-center space-x-2">
-          <img src="/favicon.ico" className="w-12 h-12 object-cover select-none" alt="Logo" />
-          <h1 className="text-xl font-bold select-none">AI Summarizer</h1>
+          <img src="/Summarizer.png" className="w-60 h-20 object-cover select-none" alt="Logo" />
+          
         </div>
 
         {/* Desktop Links */}

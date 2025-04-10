@@ -10,7 +10,7 @@ export default function HomePage() {
     before:absolute before:content-['🚀'] before:-top-10 before:-left-10 before:text-7xl before:animate-spin
     after:absolute after:content-['🔥'] after:-bottom-10 after:-right-10 after:text-7xl after:animate-bounce select-none
   ">
-        Welcome to AI Summarizer App
+        Welcome to SummArIzer
       </h1>
       <br />
 
