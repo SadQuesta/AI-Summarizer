@@ -10,27 +10,27 @@ type Props = {
 };
 
 export default function SummaryList({ summaries, deleteSummary }: Props) {
-  const [selectedTag, setSelectedTag] = useState<string>("Tümü");
+  const [selectedTag, setSelectedTag] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("newest");
   const [selectedFormat, setSelectedFormat] = useState("");
 
-  // Her summary'den maksimum 2 tag al, sonra benzersiz hale getir
+  //Take 2 tags from one summary
   const tags = useMemo(() => {
     const limitedTags = summaries.flatMap(s => s.tags?.slice(0, 2) || []);
     const uniqueTags = Array.from(new Set(limitedTags));
-    return ["Tümü", ...uniqueTags];
+    return ["All", ...uniqueTags];
   }, [summaries]);
 
   const formats = useMemo(
-    () => [...new Set(summaries.map(s => s.format || "Bilinmiyor"))],
+    () => [...new Set(summaries.map(s => s.format || "Unknown"))],
     [summaries]
   );
 
   const filteredSummaries = useMemo(() => {
     let filtered = [...summaries];
 
-    if (selectedTag !== "Tümü") {
+    if (selectedTag !== "All") {
       filtered = filtered.filter(s => s.tags?.includes(selectedTag));
     }
 
@@ -55,17 +55,17 @@ export default function SummaryList({ summaries, deleteSummary }: Props) {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold text-gray-800 ml-1.5 mb-4">Özet Geçmişim</h2>
+      <h2 className="text-2xl font-semibold text-gray-800 ml-1.5 mb-4">Summary History</h2>
 
       <input
         type="text"
-        placeholder="Özette ara..."
+        placeholder="Search in Summary..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         className="w-full p-2 border rounded-lg mb-4"
       />
 
-      {/* TAG FİLTRESİ */}
+      {/* TAG Filter */}
       <div className="flex flex-wrap gap-2 mb-4">
         {tags.map(tag => (
           <button
@@ -82,7 +82,7 @@ export default function SummaryList({ summaries, deleteSummary }: Props) {
         ))}
       </div>
 
-      {/* SIRALAMA VE FORMAT FİLTRESİ */}
+      {/* Sort and Format Filters */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <select
           value={sortOption}
@@ -90,8 +90,8 @@ export default function SummaryList({ summaries, deleteSummary }: Props) {
           onChange={(e) => setSortOption(e.target.value)}
           className="p-2 border rounded"
         >
-          <option value="newest">📅 Yeni → Eski</option>
-          <option value="oldest">📅 Eski → Yeni</option>
+          <option value="newest">📅 New → Old</option>
+          <option value="oldest">📅 Old → New</option>
         </select>
 
         <select
@@ -100,17 +100,17 @@ export default function SummaryList({ summaries, deleteSummary }: Props) {
           onChange={(e) => setSelectedFormat(e.target.value)}
           className="p-2 border rounded"
         >
-          <option value="">📂 Tüm Türler</option>
+          <option value="">📂 All Species</option>
           {formats.map((format) => (
             <option key={format} value={format}>{format}</option>
           ))}
         </select>
       </div>
 
-      {/* ÖZETLER */}
+      {/* Summaries */}
       <div className="space-y-4 m-1.5 mb-2">
         {filteredSummaries.length === 0 ? (
-          <p>Aramanıza uygun özet bulunamadı.</p>
+          <p>No abstracts matching your search found.</p>
         ) : (
           filteredSummaries.map((summary) => (
             <SummaryItem

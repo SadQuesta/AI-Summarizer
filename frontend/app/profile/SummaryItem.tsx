@@ -26,8 +26,8 @@ export default function SummaryItem({ summary, handleDeleteSummary }: Props) {
 
   return (
     <div
-      className={`bg-gray-200 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer ${
-        isExpanded ? "max-h-full" : "max-h-24 overflow-hidden"
+      className={`bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer ${
+        isExpanded ? "max-h-full" : "max-h-30 overflow-hidden"
       }`}
       onClick={toggleExpand}
     >
@@ -66,25 +66,25 @@ export default function SummaryItem({ summary, handleDeleteSummary }: Props) {
       {isExpanded && (
         <div className="mt-4 p-4 bg-gray-100 rounded-lg space-y-3">
           <section>
-            <h4 className="font-semibold">Özet Metni:</h4>
+            <h4 className="font-semibold">Summary Text:</h4>
             <p className="text-gray-700 whitespace-pre-line">{summary.text}</p>
           </section>
 
           <section>
-            <h4 className="font-semibold">Özet Sonucu:</h4>
+            <h4 className="font-semibold">Summary Result:</h4>
             <p className="text-gray-700 whitespace-pre-line">{summary.summary}</p>
           </section>
 
           {summary.main_idea && (
             <section>
-              <h4 className="text-blue-700 font-semibold">Ana Fikir:</h4>
+              <h4 className="text-blue-700 font-semibold">Main Idea:</h4>
               <p className="text-gray-800 whitespace-pre-line">{summary.main_idea}</p>
             </section>
           )}
 
           {summary.key_points && (
             <section>
-              <h4 className="text-amber-800 font-semibold">Önemli Noktalar:</h4>
+              <h4 className="text-amber-800 font-semibold">Important Points:</h4>
               <ul className="list-disc list-inside text-gray-800">
                 {summary.key_points.split("\n").map((point, idx) => (
                   <li key={idx}>{point}</li>
@@ -95,14 +95,14 @@ export default function SummaryItem({ summary, handleDeleteSummary }: Props) {
 
           {summary.conclusion && (
             <section>
-              <h4 className="text-red-700 font-semibold">Sonuç:</h4>
+              <h4 className="text-red-700 font-semibold">Result:</h4>
               <p className="text-gray-800 whitespace-pre-line">{summary.conclusion}</p>
             </section>
           )}
 
           {summary.tags && summary.tags.length > 0 && (
             <section>
-              <h4 className="text-gray-800 font-semibold">Etiketler:</h4>
+              <h4 className="text-gray-800 font-semibold">Tickets:</h4>
               <div className="flex flex-wrap gap-2">
                 {summary.tags.map((tag, index) => (
                   <span
@@ -120,7 +120,7 @@ export default function SummaryItem({ summary, handleDeleteSummary }: Props) {
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition mt-4"
             onClick={handleDownloadClick}
           >
-            PDF Olarak İndir
+          Download as PDF 
           </button>
         </div>
       )}

@@ -33,10 +33,18 @@ class PDF(FPDF):
 
     def add_bullet_points(self, text):
         self.set_font("Roboto", "", size=12)
+        
         for line in text.split("\n"):
-            if line.strip():
-                self.cell(5)
-                self.cell(0, 10, f"- {line.strip()}", ln=True)
+            clean_line = line.strip()
+            if clean_line:
+                # İlk harfi büyük yap ve noktayla bitir
+                formatted_line = clean_line[0].upper() + clean_line[1:]
+                if not formatted_line.endswith("."):
+                    formatted_line += "."
+
+                self.cell(5)  # Girinti
+                self.multi_cell(0, 10, f" {formatted_line}")
+                self.ln(1)
 
     def add_categorized(self, summary_dict):
         self.set_font("Roboto", "", size=12)

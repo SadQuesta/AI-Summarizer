@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useRequireToken } from "@hooks/useRequireToken";
-import { createSummary } from "@/lib/api";
+import { createSummary, downloadSummaryAsPDF } from "@/lib/api";
 import { SummaryType } from "../types/types";
 
 export default function SummarizerPage() {
@@ -17,10 +17,10 @@ export default function SummarizerPage() {
   const [length, setLength] = useState("medium");
 
   const summaryFormats = [
-    { label: "Paragraf", value: "paragraph" },
-    { label: "Madde İşaretli", value: "bullet" },
-    { label: "Kategorize", value: "categorized" },
-    { label: "Kısa", value: "short" },
+    { label: "Paragrph", value: "paragraph" },
+    { label: "Bullet Points", value: "bullet" },
+    { label: "Categorized", value: "categorized" },
+    { label: "Short", value: "short" },
   ];
 
   const lengthMap = ["short", "medium", "long"];
@@ -33,7 +33,10 @@ export default function SummarizerPage() {
     setIsLoading(true);
     try {
       const res = await createSummary(text, format, length, token);
-      setSummary(res.summary);
+      setSummary({
+        ...res.summary,
+        id: res.id, // ✅ ID'yi burada özetin içine ekliyoruz
+      });
     } catch (error) {
       console.error("Özetleme hatası:", error);
     } finally {
@@ -41,11 +44,20 @@ export default function SummarizerPage() {
     }
   };
 
+  const handleDownloadPDF = async () => {
+    if (!summary?.id) return;
+    try {
+      await downloadSummaryAsPDF(summary.id, token);
+    } catch (error) {
+      console.error("PDF indirme hatası:", error);
+    }
+  };
+
   return (
     <div className="max-w-9xl mx-auto my-8 p-6 bg-white shadow-lg rounded-lg flex flex-col lg:flex-row gap-6 min-h-[600px]">
       {/* Sol Panel */}
       <div className="flex-1">
-        <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">Metin Özetleyici</h1>
+        <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">Summarizer</h1>
 
         {/* Format ve Uzunluk Seçimi */}
         <div className="mb-6">
@@ -66,9 +78,9 @@ export default function SummarizerPage() {
               ))}
             </div>
             <div className="flex items-center gap-2 min-w-[220px]">
-              <span className="text-sm text-gray-600">Kısa</span>
+              <span className="text-sm text-gray-600">Short</span>
               <input
-                aria-label="Lenght Selection"
+                aria-label="Length Selection"
                 type="range"
                 min={0}
                 max={2}
@@ -77,7 +89,7 @@ export default function SummarizerPage() {
                 onChange={(e) => setLength(lengthMap[parseInt(e.target.value)])}
                 className="w-full accent-blue-600"
               />
-              <span className="text-sm text-gray-600">Uzun</span>
+              <span className="text-sm text-gray-600">Long</span>
             </div>
           </div>
         </div>
@@ -85,7 +97,7 @@ export default function SummarizerPage() {
         {/* Metin Girişi */}
         <textarea
           className="w-full text-base p-3 border border-gray-300 rounded-lg mb-4 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Özetlemek istediğiniz metni buraya yazın..."
+          placeholder="Write the text you want to summarize here..."
           aria-label="Özetlenecek metin girişi"
           rows={8}
           value={text}
@@ -99,7 +111,7 @@ export default function SummarizerPage() {
           onClick={handleSummarize}
           disabled={isLoading}
         >
-          {isLoading ? "Özetleniyor..." : "Özetle"}
+          {isLoading ? "Summarizing..." : "Summarize"}
         </button>
       </div>
 
@@ -107,24 +119,24 @@ export default function SummarizerPage() {
       {summary && (
         <div className="w-full lg:w-[50%] bg-gray-50 border border-gray-200 rounded-lg shadow-md p-4 flex flex-col justify-between">
           <div>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">📄 Özet</h2>
+            <h2 className="text-xl font-bold text-gray-800 mb-4">📄 Summary</h2>
 
             {format === "categorized" ? (
               <div className="space-y-4 text-sm">
                 <div>
-                  <h3 className="font-semibold text-gray-700">Ana Fikir</h3>
+                  <h3 className="font-semibold text-gray-700">Main Idea</h3>
                   <p>{summary.main_idea}</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-700">Önemli Noktalar</h3>
+                  <h3 className="font-semibold text-gray-700">Important Points</h3>
                   <p>{summary.key_points}</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-700">Sonuç</h3>
+                  <h3 className="font-semibold text-gray-700">Result</h3>
                   <p>{summary.conclusion}</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-700">Etiketler</h3>
+                  <h3 className="font-semibold text-gray-700">Tags</h3>
                   <ul className="flex flex-wrap gap-2">
                     {summary.tags?.map((tag, idx) => (
                       <li key={idx} className="bg-blue-100 text-blue-800 py-1 px-2 rounded-lg text-xs">
@@ -137,7 +149,7 @@ export default function SummarizerPage() {
             ) : (
               <div className="text-sm">
                 <p>{summary.summary}</p>
-                <h3 className="font-semibold mt-4 text-gray-700">Etiketler</h3>
+                <h3 className="font-semibold mt-4 text-gray-700">Tickets</h3>
                 <ul className="flex flex-wrap gap-2">
                   {summary.tags?.map((tag, idx) => (
                     <li key={idx} className="bg-blue-100 text-blue-800 py-1 px-2 rounded-lg text-xs">
@@ -150,10 +162,10 @@ export default function SummarizerPage() {
           </div>
 
           <button
-            onClick={() => console.log("PDF indirilecek")}
-            className="mt-6 w-full py-2 text-sm rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition mt-4"
+            onClick={handleDownloadPDF}
           >
-            PDF olarak indir
+            Download as PDF
           </button>
         </div>
       )}

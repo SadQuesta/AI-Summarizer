@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const router = useRouter();
 
-  // 🗑 Özet Silme
+  // 🗑 Summary Delete
   const deleteSummaryById = async (id: number) => {
     if (!token) return;
     try {
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // 📸 Profil Fotoğrafı Güncelle
+  //  Update profile image
   const updateProfilePicture = async (file: File) => {
     if (!token) return;
     try {
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // 🔒 Token gerekiyorsa yönlendirme
+  //  If token needed scnerio
   const requireToken = (): string => {
     if (!token) {
       router.push("/login");
@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return token;
   };
 
-  // 🧠 Profil Verisi Getir
+  //  Take prfile data
   const fetchProfile = async (accessToken: string) => {
     try {
       setLoading(true);
@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // 🔐 Giriş Yap
+  // Login
   const login = async (idOrEmail: string, password: string) => {
     try {
       const res = await loginUser(idOrEmail, password);
@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // 🆕 Kayıt Ol
+  // register
   const register = async (username: string, email: string, password: string) => {
     try {
       const res = await registerUser(username, email, password);
@@ -108,7 +108,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // 🚪 Oturumu Kapat
+  // Log out
   const logout = async () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -118,7 +118,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     router.push("/auth");
   };
 
-  // 🔁 İlk Yüklenmede localStorage'dan token/user çek
+  //  Get token/user from localStorage on first load
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");

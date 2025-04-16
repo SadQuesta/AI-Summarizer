@@ -10,12 +10,12 @@ import { SummaryType } from "../types/types";
 const ProfilePage = (): JSX.Element => {
   const authContext = useContext(AuthContext);
 
-  if (!authContext) return <p className="text-center">Yükleniyor...</p>;
+  if (!authContext) return <p className="text-center">Loading...</p>;
 
   const { user, summaries, logout, loading, error, deleteSummary } = authContext;
 
-  if (loading) return <p className="text-center">Yükleniyor...</p>;
-  if (error || !user) return <p className="text-center text-red-500">Kullanıcı bilgisi yüklenemedi.</p>;
+  if (loading) return <p className="text-center">Loading...</p>;
+  if (error || !user) return <p className="text-center text-red-500">User information could not be loaded.</p>;
 
   return (
     <ProtectedRoute>
